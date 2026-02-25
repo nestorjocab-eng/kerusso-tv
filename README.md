@@ -4,107 +4,63 @@ docs/index.html
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kerusso TV</title>
+<title>Luz Eterna TV - En Vivo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <style>
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #0e1a2b;
-    color: white;
-}
-header {
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-    url('https://images.unsplash.com/photo-1504052434569-70ad5836ab65');
-    background-size: cover;
-    background-position: center;
-    padding: 120px 20px;
-    text-align: center;
-}
-header h1 {
-    font-size: 3.5em;
-    margin-bottom: 10px;
-}
-header p {
-    font-size: 1.3em;
-    max-width: 700px;
-    margin: auto;
-}
-.btn {
-    display: inline-block;
-    margin: 15px;
-    padding: 15px 35px;
-    background-color: #f4c430;
-    color: black;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 8px;
-    transition: 0.3s;
-}
-.btn:hover {
-    background-color: #ffd700;
-}
-.section {
-    padding: 60px 20px;
-    text-align: center;
-}
-.cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-}
-.card {
-    background-color: #1c2c44;
-    padding: 20px;
-    width: 280px;
-    border-radius: 10px;
-}
-footer {
-    background-color: #08101a;
-    text-align: center;
-    padding: 20px;
-}
-@media (max-width: 768px) {
-    header h1 {
-        font-size: 2.2em;
-    }
-    .cards {
-        flex-direction: column;
-        align-items: center;
-    }
-}
+body { font-family: 'Montserrat', sans-serif; background-color:#0A1628; color:white; margin:0;}
+.text-gradient { background: linear-gradient(135deg, #D4AF37 0%, #FFF 50%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+.hero-bg { background: linear-gradient(135deg, #0A1628 0%, #162B4D 50%, #0F1F38 100%); min-height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column; padding-top:80px; }
+.video-container { position:relative; width:100%; max-width:800px; aspect-ratio:16/9; background:#000; border-radius:1rem; overflow:hidden; margin:auto;}
+video { width:100%; height:100%; object-fit:cover; border-radius:1rem;}
+button { cursor:pointer; }
 </style>
 </head>
 <body>
 
-<header>
-    <h1>Kerusso TV</h1>
-    <p>Llevando el mensaje de Jesucristo con poder, revelación y verdad.</p>
-    <a href="#" class="btn">🔴 Ver En Vivo</a>
-    <a href="#" class="btn">🙏 Donar</a>
-</header>
-
-<section class="section">
-    <h2>Últimas Prédicas</h2>
-    <div class="cards">
-        <div class="card">
-            <h3>El Espíritu de Sabiduría</h3>
-            <p>Basado en Isaías 11 – Revelación para estos tiempos.</p>
-        </div>
-        <div class="card">
-            <h3>La Pesca Milagrosa</h3>
-            <p>De escasez a abundancia – Lucas 5.</p>
-        </div>
-        <div class="card">
-            <h3>Rompiendo Cisternas Rotas</h3>
-            <p>Jeremías 2:13 – Restauración espiritual.</p>
-        </div>
-    </div>
+<!-- Hero -->
+<section class="hero-bg text-center">
+  <h1 class="text-5xl md:text-7xl font-bold mb-4 font-serif">Tu Fe en <span class="text-gradient italic">Movimiento</span></h1>
+  <p class="text-gray-300 mb-8 text-xl max-w-2xl mx-auto">Transmisión cristiana 24 horas. Mensajes de esperanza y alabanza.</p>
+  <a href="#envivo" class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-navy-900 px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl">Ver Transmisión</a>
 </section>
 
-<footer>
-    © 2026 Kerusso TV | Todos los derechos reservados
+<!-- En Vivo -->
+<section id="envivo" class="py-20 bg-navy-800 text-center">
+  <h2 class="text-4xl md:text-5xl font-bold mb-6 font-serif">Transmisión <span class="text-yellow-400">En Vivo</span></h2>
+  <p class="text-gray-400 mb-8">Únete a nuestra comunidad en este momento. La palabra de Dios no tiene horario.</p>
+  
+  <div class="video-container mb-6">
+    <video id="video" controls autoplay muted></video>
+  </div>
+
+  <h3 class="text-xl font-bold">Alabanza y Adoración Matutina</h3>
+  <p class="text-gray-300">Con el Pastor Roberto Mendoza • 6:00 AM - 9:00 AM</p>
+</section>
+
+<!-- Footer -->
+<footer class="bg-navy-900 border-t border-yellow-500/20 pt-8 pb-4 text-center text-gray-400">
+  &copy; 2026 Luz Eterna TV. Todos los derechos reservados.
 </footer>
+
+<script>
+const video = document.getElementById('video');
+const videoSrc = 'https://s.emisoras.tv:8081/kerussotv/index.m3u8';
+
+if(Hls.isSupported()) {
+  const hls = new Hls();
+  hls.loadSource(videoSrc);
+  hls.attachMedia(video);
+  hls.on(Hls.Events.MANIFEST_PARSED, function() {
+    video.play();
+  });
+} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+  video.src = videoSrc;
+  video.addEventListener('loadedmetadata', function() {
+    video.play();
+  });
+}
+</script>
 
 </body>
 </html>
